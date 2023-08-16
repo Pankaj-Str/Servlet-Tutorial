@@ -140,4 +140,47 @@ Assuming your application is deployed on a server at `http://localhost:8080/your
 
 When you access this URL multiple times, the servlet will keep track of the number of visits for each user's session.
 
+## Example implementation that demonstrates how to get the creation time and last accessed time of a session using the `HttpSession` object in a Java Servlet application:
+
+1. **Create a Servlet (`SessionTimeServlet`) to get session creation and last accessed times:**
+
+```java
+import java.io.*;
+import java.util.Date;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class SessionTimeServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get the session or create a new one if it doesn't exist
+        HttpSession session = request.getSession(true);
+        
+        // Get session creation time
+        Date creationTime = new Date(session.getCreationTime());
+        
+        // Get session last accessed time
+        Date lastAccessedTime = new Date(session.getLastAccessedTime());
+        
+        response.setContentType("text/html");
+        PrintWriter out = response.getWriter();
+        
+        out.println("<html><body>");
+        out.println("<h1>Session Time Example</h1>");
+        out.println("<p>Session ID: " + session.getId() + "</p>");
+        out.println("<p>Session Creation Time: " + creationTime + "</p>");
+        out.println("<p>Session Last Accessed Time: " + lastAccessedTime + "</p>");
+        out.println("</body></html>");
+    }
+}
+```
+
+2. **Add the servlet to your `web.xml` (deployment descriptor) as before.
+
+3. **Access the servlet via a URL to see session creation and last accessed times:**
+
+Assuming your application is deployed on a server at `http://localhost:8080/your-app-name`, you can access the session time servlet using the URL `http://localhost:8080/your-app-name/sessionTime`.
+
+Each time you access this URL, the servlet will display the session ID, creation time, and last accessed time of the session. If you refresh the page, you'll see that the last accessed time is updated.
+
+In this example, we're using the `getCreationTime()` and `getLastAccessedTime()` methods of the `HttpSession` object to retrieve the creation time and last accessed time of the session. These timestamps are represented as Unix timestamps (milliseconds since January 1, 1970). We convert them to human-readable `Date` objects for display.
 
