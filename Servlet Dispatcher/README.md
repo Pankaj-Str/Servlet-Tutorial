@@ -167,7 +167,7 @@ import java.io.*;
 public class ServletDispatcher extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = request.getServletPath();
-        
+        try {
         if ("/home".equals(path)) {
             request.getRequestDispatcher("/homeServlet").forward(request, response);
         } else if ("/about".equals(path)) {
@@ -178,6 +178,9 @@ public class ServletDispatcher extends HttpServlet {
             out.println("<h1>Error: Page not found</h1>");
             out.close();
         }
+        }catch(Exception e) {
+        	request.getRequestDispatcher("/Err").forward(request, response);
+        }	
     }
 }
 ```
@@ -210,9 +213,34 @@ public class ServletDispatcher extends HttpServlet {
     <servlet-name>ServletDispatcher</servlet-name>
     <url-pattern>/app/*</url-pattern>
 </servlet-mapping>
+ <error-page>
+   <error-code>404</error-code>
+   <location>/error.jsp</location>
+ </error-page>
+  <error-page>
+ <exception-type>java.lang.Throwable</exception-type>
+   <location>/error.jsp</location>
+ </error-page>
 ```
 
-5. Access the URLs in your browser:
+5. Error Page : 
+```jsp
+ServletDispatcher\src\main\webapp\error.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>page not found...</h1>
+</body>
+</html>
+```
+6. Access the URLs in your browser:
 
 - Home Page: http://localhost:8080/yourapp/app/home
 - About Page: http://localhost:8080/yourapp/app/about
